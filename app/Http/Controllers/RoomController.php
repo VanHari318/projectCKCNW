@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,6 +12,7 @@ class RoomController extends Controller
 {
     public function store(Request $request, Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {
             abort(403);
@@ -35,6 +37,7 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
+        /** @var User $user */
         $user = Auth::user();
         $course = $room->course;
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {

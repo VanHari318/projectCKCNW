@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assignment;
 use App\Models\Course;
 use App\Models\Grade;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,7 @@ class AssignmentController extends Controller
 {
     public function store(Request $request, Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {
             abort(403);
@@ -41,6 +43,7 @@ class AssignmentController extends Controller
 
     public function take(Assignment $assignment)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -77,6 +80,7 @@ class AssignmentController extends Controller
 
     public function submit(Request $request, Assignment $assignment)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -147,6 +151,7 @@ class AssignmentController extends Controller
     // Teacher grades/overrides an assignment score
     public function grade(Request $request, Grade $grade)
     {
+        /** @var User $user */
         $user = Auth::user();
         $course = $grade->course;
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {
@@ -167,6 +172,7 @@ class AssignmentController extends Controller
     // Teacher deletes an assignment
     public function destroy(Assignment $assignment)
     {
+        /** @var User $user */
         $user = Auth::user();
         $course = $assignment->course;
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {

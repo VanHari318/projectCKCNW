@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Grade;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,7 @@ class CourseController extends Controller
 {
     public function show(Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         $classroom = $course->classroom;
 
@@ -108,6 +110,7 @@ class CourseController extends Controller
 
     public function store(Request $request, Classroom $classroom)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $classroom->teacher_id !== $user->id) {
             abort(403);
@@ -129,6 +132,7 @@ class CourseController extends Controller
 
     public function destroy(Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         $classroom = $course->classroom;
         if (!$user->isTeacher() || $classroom->teacher_id !== $user->id) {
@@ -142,6 +146,7 @@ class CourseController extends Controller
 
     public function join(Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -163,6 +168,7 @@ class CourseController extends Controller
 
     public function leave(Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);

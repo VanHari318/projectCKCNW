@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Grade;
 use App\Models\Quiz;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,7 @@ class QuizController extends Controller
 {
     public function store(Request $request, Course $course)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {
             abort(403);
@@ -42,6 +44,7 @@ class QuizController extends Controller
 
     public function take(Quiz $quiz)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -78,6 +81,7 @@ class QuizController extends Controller
 
     public function submit(Request $request, Quiz $quiz)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -148,6 +152,7 @@ class QuizController extends Controller
 
     public function destroy(Quiz $quiz)
     {
+        /** @var User $user */
         $user = Auth::user();
         $course = $quiz->course;
         if (!$user->isTeacher() || $course->classroom->teacher_id !== $user->id) {

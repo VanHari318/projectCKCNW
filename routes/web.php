@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 
 // Home page
 Route::get('/', function () {
@@ -26,13 +31,43 @@ Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // Teacher Routes - Chỉ teacher mới được truy cập
-    Route::middleware('checkrole:teacher')->group(function () {
-        // Sẽ thêm các routes của teacher ở đây sau
-    });
-    
     // Student Routes - Chỉ student mới được truy cập
     Route::middleware('checkrole:student')->group(function () {
-        // Sẽ thêm các routes của student ở đây sau
+        Route::get('/student/join', [StudentController::class, 'join'])->name('student.join');
+        Route::get('/student/classrooms/{classroom}', [StudentController::class, 'showClassroom'])->name('student.classrooms.show');
+        Route::get('/student/courses/{course}', [StudentController::class, 'showCourse'])->name('student.courses.show');
+        Route::post('/student/classrooms/join', [ClassroomController::class, 'join'])
+            ->name('student.classrooms.join');
+        Route::post('/student/classrooms/{classroom}/leave', [ClassroomController::class, 'leave'])
+            ->name('student.classrooms.leave');
+        Route::post('/student/courses/{course}/join', [CourseController::class, 'join'])
+            ->name('student.courses.join');
+        Route::post('/student/courses/{course}/leave', [CourseController::class, 'leave'])
+            ->name('student.courses.leave');
+    });
+
+    // Teacher Routes - Chỉ teacher mới được truy cập
+    Route::middleware('checkrole:teacher')->group(function () {
+        Route::get('/teacher/manage', [TeacherController::class, 'manage'])->name('teacher.manage');
+
+        Route::post('/teacher/classrooms', [ClassroomController::class, 'store'])
+            ->name('teacher.classrooms.store');
+        Route::delete('/teacher/classrooms/{classroom}', [ClassroomController::class, 'destroy'])
+            ->name('teacher.classrooms.destroy');
+
+        Route::post('/teacher/classrooms/{classroom}/courses', [CourseController::class, 'store'])
+            ->name('teacher.courses.store');
+        Route::delete('/teacher/courses/{course}', [CourseController::class, 'destroy'])
+            ->name('teacher.courses.destroy');
+
+        Route::post('/teacher/courses/{course}/rooms', [RoomController::class, 'store'])
+            ->name('teacher.rooms.store');
+        Route::delete('/teacher/rooms/{room}', [RoomController::class, 'destroy'])
+            ->name('teacher.rooms.destroy');
+
+        Route::post('/teacher/classrooms/{classroom}/students/{student}/approve', [ClassroomController::class, 'approveStudent'])
+            ->name('teacher.students.approve');
+        Route::delete('/teacher/classrooms/{classroom}/students/{student}', [ClassroomController::class, 'removeStudent'])
+            ->name('teacher.students.remove');
     });
 });
