@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Database\Seeders\QuizSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +16,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Create demo teacher account
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Thầy Giáo',
+            'email' => 'teacher@example.com',
+            'password' => 'password',
+            'role' => 'teacher',
+        ]);
+
+        // Create demo student account
+        User::factory()->create([
+            'name' => 'Học Sinh',
+            'email' => 'student@example.com',
+            'password' => 'password',
+            'role' => 'student',
+        ]);
+
+        $this->call([
+            QuizSeeder::class,
         ]);
     }
 }

@@ -13,6 +13,7 @@ class ClassroomController extends Controller
 {
     public function show(Classroom $classroom)
     {
+        /** @var User $user */
         $user = Auth::user();
 
         // Authorization checks
@@ -50,6 +51,7 @@ class ClassroomController extends Controller
 
     public function store(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher()) {
             abort(403);
@@ -75,11 +77,12 @@ class ClassroomController extends Controller
             'teacher_id' => $user->id,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Tạo lớp học thành công! Mã lớp: ' . $code);
+        return redirect()->route('teacher.manage')->with('success', 'Tạo lớp học thành công! Mã lớp: ' . $code);
     }
 
     public function destroy(Classroom $classroom)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $classroom->teacher_id !== $user->id) {
             abort(403);
@@ -92,6 +95,7 @@ class ClassroomController extends Controller
 
     public function join(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -124,6 +128,7 @@ class ClassroomController extends Controller
 
     public function leave(Classroom $classroom)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
@@ -141,6 +146,7 @@ class ClassroomController extends Controller
 
     public function approveStudent(Classroom $classroom, User $student)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $classroom->teacher_id !== $user->id) {
             abort(403);
@@ -153,6 +159,7 @@ class ClassroomController extends Controller
 
     public function removeStudent(Classroom $classroom, User $student)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $classroom->teacher_id !== $user->id) {
             abort(403);
@@ -171,6 +178,7 @@ class ClassroomController extends Controller
     // View specific student information and grades in a modal/page
     public function viewStudentInfo(Classroom $classroom, User $student)
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isTeacher() || $classroom->teacher_id !== $user->id) {
             abort(403);

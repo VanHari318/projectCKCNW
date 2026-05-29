@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\Grade;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,11 +12,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        /** @var User $user */
         $user = Auth::user();
 
         if ($user->isTeacher()) {
             // Teacher Dashboard
-            $classroom = Classroom::with(['courses', 'students'])->where('teacher_id', $user->id)->first();
+            $classroom = Classroom::with(['courses', 'students'])
+                ->where('teacher_id', $user->id)
+                ->first();
             
             $pendingStudents = collect();
             if ($classroom) {
@@ -23,7 +27,6 @@ class DashboardController extends Controller
             }
 
             return view('dashboard.teacher', [
-                'user' => $user,
                 'classroom' => $classroom,
                 'pendingStudents' => $pendingStudents,
             ]);
@@ -53,6 +56,7 @@ class DashboardController extends Controller
 
     public function grades()
     {
+        /** @var User $user */
         $user = Auth::user();
         if (!$user->isStudent()) {
             abort(403);
