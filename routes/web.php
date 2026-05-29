@@ -8,6 +8,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\QuizController;
 
 // Home page
 Route::get('/', function () {
@@ -36,6 +38,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/student/join', [StudentController::class, 'join'])->name('student.join');
         Route::get('/student/classrooms/{classroom}', [StudentController::class, 'showClassroom'])->name('student.classrooms.show');
         Route::get('/student/courses/{course}', [StudentController::class, 'showCourse'])->name('student.courses.show');
+        Route::get('/student/assignments/{assignment}/take', [AssignmentController::class, 'take'])
+            ->name('student.assignments.take');
+        Route::post('/student/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])
+            ->name('student.assignments.submit');
+        Route::get('/student/assignments/{assignment}/review', [AssignmentController::class, 'review'])
+            ->name('student.assignments.review');
+        Route::get('/student/quizzes/{quiz}/take', [QuizController::class, 'take'])
+            ->name('student.quizzes.take');
+        Route::post('/student/quizzes/{quiz}/submit', [QuizController::class, 'submit'])
+            ->name('student.quizzes.submit');
+        Route::get('/student/quizzes/{quiz}/review', [QuizController::class, 'review'])
+            ->name('student.quizzes.review');
         Route::post('/student/classrooms/join', [ClassroomController::class, 'join'])
             ->name('student.classrooms.join');
         Route::post('/student/classrooms/{classroom}/leave', [ClassroomController::class, 'leave'])
@@ -64,6 +78,23 @@ Route::middleware('auth')->group(function () {
             ->name('teacher.rooms.store');
         Route::delete('/teacher/rooms/{room}', [RoomController::class, 'destroy'])
             ->name('teacher.rooms.destroy');
+
+        Route::post('/teacher/assignments', [AssignmentController::class, 'storeForTeacher'])
+            ->name('teacher.assignments.store');
+        Route::get('/teacher/assignments/{assignment}/edit', [AssignmentController::class, 'edit'])
+            ->name('teacher.assignments.edit');
+        Route::put('/teacher/assignments/{assignment}', [AssignmentController::class, 'update'])
+            ->name('teacher.assignments.update');
+        Route::delete('/teacher/assignments/{assignment}', [AssignmentController::class, 'destroy'])
+            ->name('teacher.assignments.destroy');
+        Route::post('/teacher/quizzes', [QuizController::class, 'storeForTeacher'])
+            ->name('teacher.quizzes.store');
+        Route::get('/teacher/quizzes/{quiz}/edit', [QuizController::class, 'edit'])
+            ->name('teacher.quizzes.edit');
+        Route::put('/teacher/quizzes/{quiz}', [QuizController::class, 'update'])
+            ->name('teacher.quizzes.update');
+        Route::delete('/teacher/quizzes/{quiz}', [QuizController::class, 'destroy'])
+            ->name('teacher.quizzes.destroy');
 
         Route::post('/teacher/classrooms/{classroom}/students/{student}/approve', [ClassroomController::class, 'approveStudent'])
             ->name('teacher.students.approve');

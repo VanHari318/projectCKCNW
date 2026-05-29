@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\Course;
+use App\Models\Grade;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,11 +87,23 @@ class StudentController extends Controller
         }
 
         $rooms = $course->rooms()->get();
+        $assignments = $course->assignments()->get();
+        $quizzes = $course->quizzes()->get();
         $isJoined = $user->courses()->where('course_id', $course->id)->exists();
+
+        $grades = Grade::where('course_id', $course->id)
+            ->where('student_id', $user->id)
+            ->get()
+            ->groupBy(function ($grade) {
+                return $grade->gradeable_type.'_'.$grade->gradeable_id;
+            });
 
         return view('student.course-show', [
             'course' => $course,
             'rooms' => $rooms,
+            'assignments' => $assignments,
+            'quizzes' => $quizzes,
+            'grades' => $grades,
             'isJoined' => $isJoined,
         ]);
     }

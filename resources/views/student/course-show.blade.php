@@ -65,6 +65,84 @@
             </div>
         @endif
 
+        <!-- Assignments Section -->
+        <div class="bg-gray-800 border border-blue-600 rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-white mb-4">Bài Tập</h2>
+            @if($assignments->count() > 0)
+                <div class="grid grid-cols-1 gap-4">
+                    @foreach($assignments as $assignment)
+                        @php
+                            $gradeKey = 'App\\Models\\Assignment_'.$assignment->id;
+                            $grade = $grades->get($gradeKey)?->first();
+                        @endphp
+                        <div class="bg-gray-900 rounded p-4 border border-gray-700 hover:border-blue-500 transition">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-white font-semibold">{{ $assignment->title }}</p>
+                                    <p class="text-sm text-gray-400 mt-1">Hạn: {{ $assignment->due_date?->format('d/m/Y H:i') }}</p>
+                                </div>
+                                @if($grade)
+                                    <span class="text-green-400 text-sm">Điểm: {{ $grade->score }}/10</span>
+                                @endif
+                            </div>
+                            <div class="mt-3">
+                                @if($grade)
+                                    <a href="{{ route('student.assignments.review', $assignment) }}" class="text-purple-300 hover:text-purple-200 text-sm">
+                                        Xem bài làm →
+                                    </a>
+                                @else
+                                    <a href="{{ route('student.assignments.take', $assignment) }}" class="text-blue-400 hover:text-blue-300 text-sm">
+                                        Làm bài →
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-400">Khóa học này chưa có bài tập.</p>
+            @endif
+        </div>
+
+        <!-- Quizzes Section -->
+        <div class="bg-gray-800 border border-purple-600 rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-white mb-4">Bài Kiểm Tra</h2>
+            @if($quizzes->count() > 0)
+                <div class="grid grid-cols-1 gap-4">
+                    @foreach($quizzes as $quiz)
+                        @php
+                            $gradeKey = 'App\\Models\\Quiz_'.$quiz->id;
+                            $grade = $grades->get($gradeKey)?->first();
+                        @endphp
+                        <div class="bg-gray-900 rounded p-4 border border-gray-700 hover:border-purple-500 transition">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-white font-semibold">{{ $quiz->title }}</p>
+                                    <p class="text-sm text-gray-400 mt-1">Hạn: {{ $quiz->due_date?->format('d/m/Y H:i') }}</p>
+                                </div>
+                                @if($grade)
+                                    <span class="text-green-400 text-sm">Điểm: {{ $grade->score }}/10</span>
+                                @endif
+                            </div>
+                            <div class="mt-3">
+                                @if($grade)
+                                    <a href="{{ route('student.quizzes.review', $quiz) }}" class="text-purple-300 hover:text-purple-200 text-sm">
+                                        Xem bài làm →
+                                    </a>
+                                @else
+                                    <a href="{{ route('student.quizzes.take', $quiz) }}" class="text-purple-400 hover:text-purple-300 text-sm">
+                                        Làm bài →
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-400">Khóa học này chưa có bài kiểm tra.</p>
+            @endif
+        </div>
+
         <!-- Leave Course Section -->
         <div class="flex justify-end">
             <form method="POST" action="{{ route('student.courses.leave', $course) }}" onsubmit="return confirm('Bạn chắc chắn muốn rời khỏi khóa học này?');">

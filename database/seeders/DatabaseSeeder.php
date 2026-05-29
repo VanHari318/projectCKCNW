@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Database\Seeders\QuizSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -29,6 +30,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'student@example.com',
             'password' => 'password',
             'role' => 'student',
+        ]);
+
+        $this->call([
+            QuizSeeder::class,
         ]);
     }
 }

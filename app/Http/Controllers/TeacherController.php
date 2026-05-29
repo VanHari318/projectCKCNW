@@ -13,7 +13,12 @@ class TeacherController extends Controller
         /** @var User $teacher */
         $teacher = Auth::user();
         
-        $classroom = Classroom::with(['courses.rooms', 'students'])
+        $classroom = Classroom::with([
+            'courses.rooms',
+            'courses.assignments.grades.student',
+            'courses.quizzes.grades.student',
+            'students',
+        ])
             ->where('teacher_id', $teacher->id)
             ->first();
 
@@ -23,9 +28,11 @@ class TeacherController extends Controller
         if ($classroom) {
             $approvedStudents = $classroom->students()
                 ->wherePivot('status', 'approved')
+                ->orderBy('name')
                 ->get();
             $pendingStudents = $classroom->students()
                 ->wherePivot('status', 'pending')
+                ->orderBy('name')
                 ->get();
         }
 

@@ -43,6 +43,14 @@
                     <p class="text-gray-400 mb-4">Bạn chưa tạo lớp học nào</p>
                     <a class="btn-primary px-6 py-2 rounded" href="{{ route('teacher.manage') }}">+ Tạo lớp mới</a>
                 </div>
+                <div class="mt-6 bg-gray-900 border border-purple-600 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-white mb-3">Tạo lớp học nhanh</h3>
+                    <form method="POST" action="{{ route('teacher.classrooms.store') }}" class="space-y-3">
+                        @csrf
+                        <input type="text" name="name" class="w-full rounded form-input px-4 py-2" placeholder="Tên lớp học" required>
+                        <button type="submit" class="btn-primary px-4 py-2 rounded w-full">Tạo lớp</button>
+                    </form>
+                </div>
             @endif
         </div>
     </div>
