@@ -120,9 +120,14 @@ class AssignmentController extends Controller
             abort(403);
         }
 
+        $shareCourses = $course->classroom->courses()
+            ->where('id', '!=', $course->id)
+            ->get();
+
         return view('teacher.assignments.edit', [
             'assignment' => $assignment,
             'course' => $course,
+            'shareCourses' => $shareCourses,
         ]);
     }
 
@@ -146,17 +151,51 @@ class AssignmentController extends Controller
             'questions.*.type' => 'required|in:single,multi',
             'questions.*.correct_options' => 'required|array|min:1',
             'questions.*.correct_options.*' => 'required|integer|min:0|max:3',
+            'share_course_ids' => 'sometimes|array',
+            'share_course_ids.*' => 'integer|exists:courses,id',
         ]);
+
+        $questions = $this->normalizeQuestions($request->questions);
 
         $assignment->update([
             'title' => $request->title,
             'duration' => $request->duration,
             'due_date' => $request->due_date,
-            'questions' => $this->normalizeQuestions($request->questions),
+            'questions' => $questions,
         ]);
 
+        $shareCourseIds = collect($request->input('share_course_ids', []))
+            ->map(fn($id) => (int) $id)
+            ->filter()
+            ->unique();
+        $sharedCount = 0;
+
+        if ($shareCourseIds->isNotEmpty()) {
+            $shareCourses = $course->classroom->courses()
+                ->whereIn('id', $shareCourseIds)
+                ->where('id', '!=', $course->id)
+                ->get();
+
+            foreach ($shareCourses as $shareCourse) {
+                Assignment::create([
+                    'course_id' => $shareCourse->id,
+                    'title' => $request->title,
+                    'duration' => $request->duration,
+                    'due_date' => $request->due_date,
+                    'questions' => $questions,
+                ]);
+            }
+
+            $sharedCount = $shareCourses->count();
+        }
+
+        $message = 'Đã cập nhật bài tập.';
+        if ($sharedCount > 0) {
+            $message .= ' Đã chia sẻ sang ' . $sharedCount . ' khóa học.';
+        }
+
         return redirect()->route('teacher.assignments.edit', $assignment->id)
-            ->with('success', 'Đã cập nhật bài tập.');
+            ->with('success', $message);
     }
 
     public function take(Assignment $assignment)

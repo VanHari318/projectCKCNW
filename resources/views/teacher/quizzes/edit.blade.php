@@ -20,6 +20,20 @@
             <input type="datetime-local" name="due_date" class="w-full rounded form-input px-4 py-2" value="{{ $quiz->due_date?->format('Y-m-d\TH:i') }}" required>
         </div>
 
+        <div class="bg-gray-900 p-4 rounded border border-gray-700">
+            <p class="text-sm text-gray-300 mb-2">Chia sẻ bài kiểm tra sang khóa học khác</p>
+            @if($shareCourses->count() > 0)
+                <select name="share_course_ids[]" multiple class="w-full rounded form-input px-3 py-2 min-h-[120px]">
+                    @foreach ($shareCourses as $shareCourse)
+                        <option value="{{ $shareCourse->id }}">{{ $shareCourse->name }}</option>
+                    @endforeach
+                </select>
+                <p class="text-xs text-gray-400 mt-2">Giữ Ctrl (hoặc Command) để chọn nhiều khóa học.</p>
+            @else
+                <p class="text-xs text-gray-400">Không có khóa học khác trong lớp để chia sẻ.</p>
+            @endif
+        </div>
+
         <div class="space-y-3" id="questionList">
             @foreach ($quiz->questions as $index => $question)
                 @php
@@ -43,7 +57,13 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                         @foreach ($question['options'] as $optIndex => $optText)
-                            <input type="text" name="questions[{{ $index }}][options][{{ $optIndex }}]" class="w-full rounded form-input px-3 py-2" value="{{ $optText }}" required>
+                            @php
+                                $optionLabel = chr(65 + $optIndex);
+                            @endphp
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-gray-400 w-5">{{ $optionLabel }}</span>
+                                <input type="text" name="questions[{{ $index }}][options][{{ $optIndex }}]" class="w-full rounded form-input px-3 py-2" value="{{ $optText }}" required>
+                            </div>
                         @endforeach
                     </div>
                     <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2" data-correct-container>
@@ -94,10 +114,10 @@
             '  </select>' +
             '</div>' +
             '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">' +
-            '  <input type="text" name="questions[' + index + '][options][0]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án A" required>' +
-            '  <input type="text" name="questions[' + index + '][options][1]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án B" required>' +
-            '  <input type="text" name="questions[' + index + '][options][2]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án C" required>' +
-            '  <input type="text" name="questions[' + index + '][options][3]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án D" required>' +
+            '  <div class="flex items-center gap-2"><span class="text-xs text-gray-400 w-5">A</span><input type="text" name="questions[' + index + '][options][0]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án A" required></div>' +
+            '  <div class="flex items-center gap-2"><span class="text-xs text-gray-400 w-5">B</span><input type="text" name="questions[' + index + '][options][1]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án B" required></div>' +
+            '  <div class="flex items-center gap-2"><span class="text-xs text-gray-400 w-5">C</span><input type="text" name="questions[' + index + '][options][2]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án C" required></div>' +
+            '  <div class="flex items-center gap-2"><span class="text-xs text-gray-400 w-5">D</span><input type="text" name="questions[' + index + '][options][3]" class="w-full rounded form-input px-3 py-2" placeholder="Đáp án D" required></div>' +
             '</div>' +
             '<div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2" data-correct-container>' +
             '  <label class="text-sm text-gray-300 flex items-center gap-2"><input type="radio" name="questions[' + index + '][correct_options][]" value="0" required> A đúng</label>' +

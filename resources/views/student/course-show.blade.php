@@ -104,7 +104,7 @@
             @endif
         </div>
 
-        <!-- Quizzes Section -->
+        <!-- Bài kiểm tra -->
         <div class="bg-gray-800 border border-purple-600 rounded-lg p-6">
             <h2 class="text-2xl font-bold text-white mb-4">Bài Kiểm Tra</h2>
             @if($quizzes->count() > 0)
