@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                             <div class="mt-3 flex gap-3">
-                                <a href="{{ $room->join_url }}" target="_blank" class="text-purple-400 hover:text-purple-300 text-sm">
+                                <a href="{{ route('rooms.show', $room) }}" class="text-purple-400 hover:text-purple-300 text-sm font-semibold">
                                     Vào phòng →
                                 </a>
                             </div>

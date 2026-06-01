@@ -83,7 +83,13 @@
                                     @endforeach
                                 </select>
                                 <input type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tiêu đề phòng" required>
-                                <input type="url" name="join_url" class="w-full rounded form-input px-4 py-2" placeholder="Link Zoom/Teams" required>
+                                <select name="room_type" id="room_type" class="w-full rounded form-input px-4 py-2" onchange="toggleUrlInput(this.value)">
+                                    <option value="jitsi">Jitsi Meeting (Tự động tạo link)</option>
+                                    <option value="external">Link ngoài (Zoom, Teams...)</option>
+                                </select>
+                                <div id="join_url_container" class="hidden">
+                                    <input type="url" name="join_url" id="join_url" class="w-full rounded form-input px-4 py-2" placeholder="Link Zoom/Teams">
+                                </div>
                                 <input type="datetime-local" name="scheduled_at" class="w-full rounded form-input px-4 py-2" required>
                                 <button type="submit" class="btn-primary px-4 py-2 rounded w-full">Tạo phòng</button>
                             </form>
@@ -193,14 +199,19 @@
                                         @foreach($course->rooms as $room)
                                             <div class="flex justify-between items-center bg-gray-800 p-2 rounded text-sm border border-gray-600">
                                                 <div>
-                                                    <p class="text-white">{{ $room->title }}</p>
+                                                    <p class="text-white font-medium">{{ $room->title }}</p>
                                                     <p class="text-xs text-gray-400">{{ $room->scheduled_at ? $room->scheduled_at->format('d/m/Y H:i') : 'N/A' }}</p>
                                                 </div>
-                                                <form method="POST" action="{{ route('teacher.rooms.destroy', $room) }}" onsubmit="return confirm('Xóa phòng?')" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-400 hover:text-red-300">✕</button>
-                                                </form>
+                                                <div class="flex items-center gap-3">
+                                                    <a href="{{ route('rooms.show', $room) }}" class="text-purple-400 hover:text-purple-300 font-semibold">
+                                                        Vào phòng →
+                                                    </a>
+                                                    <form method="POST" action="{{ route('teacher.rooms.destroy', $room) }}" onsubmit="return confirm('Xóa phòng?')" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-400 hover:text-red-300">✕</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -346,6 +357,19 @@ function updateRoomForm(courseId) {
     if (form && courseId) {
         const route = "{{ route('teacher.rooms.store', '__ID__') }}".replace('__ID__', courseId);
         form.action = route;
+    }
+}
+
+function toggleUrlInput(val) {
+    const container = document.getElementById('join_url_container');
+    const input = document.getElementById('join_url');
+    if (val === 'external') {
+        container.classList.remove('hidden');
+        input.required = true;
+    } else {
+        container.classList.add('hidden');
+        input.required = false;
+        input.value = '';
     }
 }
 

@@ -31,9 +31,5 @@ class DatabaseSeeder extends Seeder
             'password' => 'password',
             'role' => 'student',
         ]);
-
-        $this->call([
-            QuizSeeder::class,
-        ]);
     }
 }

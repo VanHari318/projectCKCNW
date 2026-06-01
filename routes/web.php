@@ -13,14 +13,14 @@ use App\Http\Controllers\QuizController;
 
 // Home page
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');
-    
+
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 });
@@ -29,10 +29,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
+    // Online Room Show
+    Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+
     // Student Routes - Chỉ student mới được truy cập
     Route::middleware('checkrole:student')->group(function () {
         Route::get('/student/join', [StudentController::class, 'join'])->name('student.join');
