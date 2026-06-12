@@ -10,6 +10,52 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+    public function info()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $classrooms = $user->classrooms()
+            ->wherePivot('status', 'approved')
+            ->with(['teacher', 'courses.assignments.grades', 'courses.quizzes.grades'])
+            ->get();
+
+        $grades = $user->grades()
+            ->with(['classroom', 'course', 'gradeable'])
+            ->latest('submitted_at')
+            ->get();
+
+        $classroomSummaries = $classrooms->map(function (Classroom $classroom) use ($grades) {
+            $courses = $classroom->courses->map(function (Course $course) use ($grades) {
+                $courseGrades = $grades->where('course_id', $course->id);
+
+                return [
+                    'course' => $course,
+                    'assignmentGrades' => $courseGrades->where('gradeable_type', 'App\\Models\\Assignment'),
+                    'quizGrades' => $courseGrades->where('gradeable_type', 'App\\Models\\Quiz'),
+                ];
+            })->values();
+
+            return [
+                'classroom' => $classroom,
+                'courses' => $courses,
+            ];
+        });
+
+        $assignmentGrades = $grades->where('gradeable_type', 'App\\Models\\Assignment');
+        $quizGrades = $grades->where('gradeable_type', 'App\\Models\\Quiz');
+
+        return view('student.info.index', [
+            'user' => $user,
+            'classroomSummaries' => $classroomSummaries,
+            'assignmentGrades' => $assignmentGrades,
+            'quizGrades' => $quizGrades,
+            'averageAssignmentScore' => $assignmentGrades->avg('score'),
+            'averageQuizScore' => $quizGrades->avg('score'),
+            'totalGrades' => $grades->count(),
+        ]);
+    }
+
     public function join()
     {
         /** @var User $user */

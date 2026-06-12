@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     // Student Routes - Chỉ student mới được truy cập
     Route::middleware('checkrole:student')->group(function () {
+        Route::get('/student/info', [StudentController::class, 'info'])->name('student.info');
         Route::get('/student/join', [StudentController::class, 'join'])->name('student.join');
         Route::get('/student/classrooms/{classroom}', [StudentController::class, 'showClassroom'])->name('student.classrooms.show');
         Route::get('/student/courses/{course}', [StudentController::class, 'showCourse'])->name('student.courses.show');

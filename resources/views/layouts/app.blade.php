@@ -64,9 +64,14 @@
                     @auth
                         <span class="text-gray-300">Xin chào, <span class="text-purple-400">{{ auth()->user()->name }}</span></span>
                         <span class="text-gray-500">|</span>
-                        <span class="px-3 py-1 rounded-full bg-purple-600 text-white text-sm">
-                            {{ auth()->user()->role === 'teacher' ? 'Giáo viên' : 'Học sinh' }}
-                        </span>
+
+                        @if(auth()->user()->isStudent())
+                            <a href="{{ route('student.info') }}" class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-purple-700 text-white hover:bg-purple-500 transition" title="Thông tin học sinh" aria-label="Thông tin học sinh">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                    <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5Z" />
+                                </svg>
+                            </a>
+                        @endif
                         
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
