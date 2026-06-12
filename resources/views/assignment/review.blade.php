@@ -5,7 +5,6 @@
 @section('content')
 <div class="flex flex-col gap-6">
     <div>
-        <a href="{{ route('student.courses.show', $course) }}" class="text-purple-400 hover:text-purple-300 text-sm mb-4 inline-block">← Quay lại khóa học</a>
         <h1 class="text-3xl font-bold text-white mb-2">{{ $assignment->title }}</h1>
         <p class="text-gray-400">Điểm: <span class="text-green-400 font-bold">{{ $grade->score }}/10</span></p>
     </div>
@@ -24,16 +23,11 @@
                     @php
                         $isSelected = in_array($optIndex, $selected, true);
                         $isCorrect = in_array($optIndex, $correct, true);
+                        $optionClass = $isCorrect ? 'text-green-500 font-semibold' : ($isSelected ? 'text-red-500 font-semibold' : 'text-gray-300');
                     @endphp
-                    <div class="flex items-center gap-2 text-sm {{ $isCorrect ? 'text-green-300' : 'text-gray-300' }}">
+                    <div class="flex items-center gap-2 text-sm {{ $optionClass }}">
                         <span class="font-mono">{{ chr(65 + $optIndex) }}.</span>
                         <span>{{ $optText }}</span>
-                        @if ($isSelected)
-                            <span class="text-purple-300">(Bạn chọn)</span>
-                        @endif
-                        @if ($isCorrect)
-                            <span class="text-green-400">(Đúng)</span>
-                        @endif
                     </div>
                 @endforeach
             </div>
