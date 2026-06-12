@@ -14,32 +14,44 @@
     </div>
 
     <div class="bg-gray-800 border border-yellow-600 rounded-lg p-6">
-        <h2 class="text-2xl font-bold text-white mb-6">📊 Bảng Điểm Thi</h2>
-        @if($quizGrades->count() > 0)
+        <h2 class="text-2xl font-bold text-white mb-6">📊 Bảng Điểm Thi / Bài Tập</h2>
+        @if($allGrades->count() > 0)
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-gray-300">
                     <thead>
                         <tr class="border-b border-yellow-600">
-                            <th class="px-4 py-3 text-yellow-300 font-semibold">Điểm Thi</th>
+                            <th class="px-4 py-3 text-yellow-300 font-semibold">Bài tập/Bài kiểm tra</th>
+                            <th class="px-4 py-3 text-yellow-300 font-semibold">Điểm</th>
                             <th class="px-4 py-3 text-yellow-300 font-semibold">Khóa Học</th>
                             <th class="px-4 py-3 text-yellow-300 font-semibold">Lớp</th>
+                            <th class="px-4 py-3 text-yellow-300 font-semibold">Lịch Sử</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($quizGrades as $grade)
+                        @foreach($allGrades as $item)
                             <tr class="border-b border-gray-700 hover:bg-gray-700 transition">
                                 <td class="px-4 py-3">
-                                    <span class="text-yellow-300 font-semibold">{{ $grade->score }}/10</span>
+                                    <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $item['grade']->gradeable_type === 'App\\Models\\Assignment' ? 'bg-blue-900 text-blue-200' : 'bg-yellow-900 text-yellow-200' }}">
+                                        {{ $item['type_label'] }}
+                                    </span>
                                 </td>
-                                <td class="px-4 py-3">{{ $grade->course?->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-3">{{ $grade->classroom?->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-3">
+                                    <span class="text-yellow-300 font-semibold">{{ $item['grade']->score }}/10</span>
+                                </td>
+                                <td class="px-4 py-3">{{ $item['grade']->course?->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-3">{{ $item['grade']->classroom?->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-3">
+                                    <a href="{{ $item['review_url'] }}" class="text-purple-300 hover:text-purple-200 text-sm font-semibold">
+                                        Lịch sử làm bài→
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         @else
-            <p class="text-gray-400">Chưa có điểm thi nào.</p>
+            <p class="text-gray-400">Chưa có thông tin điểm số.</p>
         @endif
     </div>
 </div>

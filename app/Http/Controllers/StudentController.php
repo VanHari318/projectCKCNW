@@ -44,12 +44,25 @@ class StudentController extends Controller
 
         $assignmentGrades = $grades->where('gradeable_type', 'App\\Models\\Assignment');
         $quizGrades = $grades->where('gradeable_type', 'App\\Models\\Quiz');
+        $allGrades = $grades->map(function (Grade $grade) {
+            $gradeableType = $grade->gradeable_type === 'App\\Models\\Assignment' ? 'Bài tập' : 'Bài kiểm tra';
+            $reviewRoute = $grade->gradeable_type === 'App\\Models\\Assignment'
+                ? route('student.assignments.review', $grade->gradeable_id)
+                : route('student.quizzes.review', $grade->gradeable_id);
+
+            return [
+                'grade' => $grade,
+                'type_label' => $gradeableType,
+                'review_url' => $reviewRoute,
+            ];
+        });
 
         return view('student.info.index', [
             'user' => $user,
             'classroomSummaries' => $classroomSummaries,
             'assignmentGrades' => $assignmentGrades,
             'quizGrades' => $quizGrades,
+            'allGrades' => $allGrades,
             'averageAssignmentScore' => $assignmentGrades->avg('score'),
             'averageQuizScore' => $quizGrades->avg('score'),
             'totalGrades' => $grades->count(),
