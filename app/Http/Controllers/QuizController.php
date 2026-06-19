@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Grade;
 use App\Models\Quiz;
+use App\Models\Assignment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,21 @@ class QuizController extends Controller
         $user = Auth::user();
         if (!$user->isTeacher()) {
             abort(403);
+        }
+
+        // If reposting from a source, merge its questions so validation will pass
+        if ($request->filled('source_id')) {
+            $srcType = $request->input('source_type');
+            $srcId = $request->input('source_id');
+            $source = null;
+            if ($srcType === 'assignment') {
+                $source = Assignment::find($srcId);
+            } elseif ($srcType === 'quiz') {
+                $source = Quiz::find($srcId);
+            }
+            if ($source) {
+                $request->merge(['questions' => $source->questions]);
+            }
         }
 
         $request->validate([
