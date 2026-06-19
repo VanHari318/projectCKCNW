@@ -4,15 +4,20 @@
 
 @section('content')
 <div class="flex flex-col gap-8">
+    @php
+        $courseStudents = $course->students;
+    @endphp
+
     <!-- Course Info -->
     <div>
         <a href="{{ route('student.classrooms.show', $course->classroom) }}" class="text-purple-400 hover:text-purple-300 text-sm mb-4 inline-block">← Quay lại lớp học</a>
         <h1 class="text-3xl font-bold text-white mb-2">{{ $course->name }}</h1>
         <p class="text-gray-400">Lớp: {{ $course->classroom->name }}</p>
+        <p class="text-gray-400">Giáo viên: {{ $course->classroom->teacher->name }}</p>
     </div>
 
     <!-- Course Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-gray-800 p-4 rounded border border-gray-700">
             <p class="text-gray-400 text-sm">Mô Tả</p>
             <p class="text-white mt-2">{{ $course->description ?? 'Không có mô tả' }}</p>
@@ -20,6 +25,10 @@
         <div class="bg-gray-800 p-4 rounded border border-gray-700">
             <p class="text-gray-400 text-sm">Số Phòng Học</p>
             <p class="text-2xl font-bold text-blue-400">{{ $rooms->count() }}</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded border border-gray-700">
+            <p class="text-gray-400 text-sm">Số Học Sinh Trong Khóa</p>
+            <p class="text-2xl font-bold text-green-400">{{ $courseStudents->count() }}</p>
         </div>
     </div>
 
@@ -64,6 +73,21 @@
                 <p class="text-gray-400">Khóa học này chưa có phòng học nào được lên lịch.</p>
             </div>
         @endif
+
+        <div class="bg-gray-800 border border-green-600 rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-white mb-4">Danh Sách Học Sinh Trong Khóa</h2>
+            @if($courseStudents->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    @foreach($courseStudents as $student)
+                        <div class="bg-gray-900 rounded p-4 border border-gray-700">
+                            <p class="text-white font-semibold">{{ $student->name }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-400">Khóa học này chưa có học sinh nào tham gia.</p>
+            @endif
+        </div>
 
         <!-- Assignments Section -->
         <div class="bg-gray-800 border border-blue-600 rounded-lg p-6">

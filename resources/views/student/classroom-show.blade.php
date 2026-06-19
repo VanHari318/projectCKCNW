@@ -4,11 +4,28 @@
 
 @section('content')
 <div class="flex flex-col gap-8">
+    @php
+        $approvedStudents = $classroom->students->filter(function ($student) {
+            return $student->pivot?->status === 'approved';
+        })->values();
+    @endphp
+
     <!-- Classroom Info -->
     <div>
         <a href="{{ route('dashboard') }}" class="text-purple-400 hover:text-purple-300 text-sm mb-4 inline-block">← Quay lại</a>
         <h1 class="text-3xl font-bold text-white mb-2">{{ $classroom->name }}</h1>
         <p class="text-gray-400">Giáo viên: {{ $classroom->teacher->name }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-gray-800 p-4 rounded border border-gray-700">
+            <p class="text-gray-400 text-sm">Giáo viên phụ trách</p>
+            <p class="text-xl font-semibold text-purple-300 mt-2">{{ $classroom->teacher->name }}</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded border border-gray-700">
+            <p class="text-gray-400 text-sm">Học sinh trong lớp</p>
+            <p class="text-xl font-bold text-green-400 mt-2">{{ $approvedStudents->count() }}</p>
+        </div>
     </div>
 
     <!-- Room Info -->
@@ -19,7 +36,7 @@
         </div>
         <div class="bg-gray-800 p-4 rounded border border-gray-700">
             <p class="text-gray-400 text-sm">Số Sinh Viên</p>
-            <p class="text-xl font-bold text-green-400">{{ $classroom->students->count() }}</p>
+            <p class="text-xl font-bold text-green-400">{{ $approvedStudents->count() }}</p>
         </div>
         <div class="bg-gray-800 p-4 rounded border border-gray-700">
             <p class="text-gray-400 text-sm">Số Khóa Học</p>
@@ -64,6 +81,21 @@
             <p class="text-gray-400">Lớp học này chưa có khóa học nào.</p>
         </div>
     @endif
+
+    <div class="bg-gray-800 border border-green-600 rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-white mb-4">Danh Sách Học Sinh Trong Lớp</h2>
+        @if($approvedStudents->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @foreach($approvedStudents as $student)
+                    <div class="bg-gray-900 rounded p-4 border border-gray-700">
+                        <p class="text-white font-semibold">{{ $student->name }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-gray-400">Lớp học này chưa có học sinh nào.</p>
+        @endif
+    </div>
 
     <!-- Leave Class Section -->
     <div class="flex justify-end">
