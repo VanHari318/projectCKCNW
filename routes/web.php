@@ -36,6 +36,17 @@ Route::middleware('auth')->group(function () {
     // Online Room Show
     Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
 
+    // Messaging Routes
+    Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/chats/{user}', [App\Http\Controllers\MessageController::class, 'getMessages'])->name('messages.get');
+    Route::post('/messages/chats/{user}', [App\Http\Controllers\MessageController::class, 'sendMessage'])->name('messages.send');
+    Route::get('/messages/unread-count', [App\Http\Controllers\MessageController::class, 'getUnreadCount'])->name('messages.unread_count');
+
+    // Group Messaging Routes
+    Route::get('/group-messages', [App\Http\Controllers\GroupMessageController::class, 'index'])->name('group_messages.index');
+    Route::get('/group-messages/chats/{course}', [App\Http\Controllers\GroupMessageController::class, 'getMessages'])->name('group_messages.get');
+    Route::post('/group-messages/chats/{course}', [App\Http\Controllers\GroupMessageController::class, 'sendMessage'])->name('group_messages.send');
+
     // Student Routes - Chỉ student mới được truy cập
     Route::middleware('checkrole:student')->group(function () {
         Route::get('/student/info', [StudentController::class, 'info'])->name('student.info');

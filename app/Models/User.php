@@ -86,4 +86,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Grade::class, 'student_id');
     }
+
+    // A user has sent many messages
+    public function messagesSent()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    // A user has received many messages
+    public function messagesReceived()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
+    }
+
+    // A user has sent many group messages
+    public function groupMessages()
+    {
+        return $this->hasMany(GroupMessage::class, 'sender_id');
+    }
 }

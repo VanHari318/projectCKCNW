@@ -48,4 +48,10 @@ class Course extends Model
     {
         return $this->hasMany(Grade::class);
     }
+
+    // Course has many Group Messages
+    public function groupMessages()
+    {
+        return $this->hasMany(GroupMessage::class, 'course_id');
+    }
 }
