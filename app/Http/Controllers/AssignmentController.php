@@ -6,6 +6,7 @@ use App\Models\Assignment;
 use App\Models\Course;
 use App\Models\Grade;
 use App\Models\User;
+use App\Models\QUiz;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,6 +20,22 @@ class AssignmentController extends Controller
             abort(403);
         }
 
+        // If reposting from a source, merge its questions so validation will pass
+        if ($request->filled('source_id')) {
+            $srcType = $request->input('source_type');
+            $srcId = $request->input('source_id');
+            $source = null;
+            if ($srcType === 'assignment') {
+                $source = Assignment::find($srcId);
+            } elseif ($srcType === 'quiz') {
+                $source = Quiz::find($srcId);
+            }
+            if ($source) {
+                $request->merge(['questions' => $source->questions]);
+            }
+        }
+        //
+        
         $request->validate([
             'scope' => 'required|in:course,classroom',
             'classroom_id' => 'required|integer|exists:classrooms,id',

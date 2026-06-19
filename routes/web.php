@@ -78,6 +78,13 @@ Route::middleware('auth')->group(function () {
     // Teacher Routes - Chỉ teacher mới được truy cập
     Route::middleware('checkrole:teacher')->group(function () {
         Route::get('/teacher/manage', [TeacherController::class, 'manage'])->name('teacher.manage');
+        Route::get('/teacher/manage', [TeacherController::class, 'manageWithSources'])->name('teacher.manage');
+        //
+        Route::get('/teacher/assignments', [TeacherController::class, 'sources'])->name('teacher.assignments.index');
+        Route::get('/teacher/quizzes', [TeacherController::class, 'sources'])->name('teacher.quizzes.index');
+
+
+        //
 
         Route::post('/teacher/classrooms', [ClassroomController::class, 'store'])
             ->name('teacher.classrooms.store');
