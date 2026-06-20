@@ -98,12 +98,18 @@
                         @php
                             $gradeKey = 'App\\Models\\Assignment_'.$assignment->id;
                             $grade = $grades->get($gradeKey)?->first();
+                            $isOverdue = $assignment->due_date && $assignment->due_date->isPast();
                         @endphp
                         <div class="bg-gray-900 rounded p-4 border border-gray-700 hover:border-blue-500 transition">
                             <div class="flex justify-between items-start">
                                 <div>
                                     <p class="text-white font-semibold">{{ $assignment->title }}</p>
-                                    <p class="text-sm text-gray-400 mt-1">Hạn: {{ $assignment->due_date?->format('d/m/Y H:i') }}</p>
+                                    <p class="text-sm {{ $isOverdue && !$grade ? 'text-red-400' : 'text-gray-400' }} mt-1">
+                                        Hạn: {{ $assignment->due_date?->format('d/m/Y H:i') }}
+                                        @if($isOverdue && !$grade)
+                                            <span class="ml-2 text-xs bg-red-900 text-red-300 px-2 py-0.5 rounded">Đã hết hạn</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 @if($grade)
                                     <span class="text-green-400 text-sm">Điểm: {{ $grade->score }}/10</span>
@@ -114,6 +120,10 @@
                                     <a href="{{ route('student.assignments.review', $assignment) }}" class="text-purple-300 hover:text-purple-200 text-sm">
                                         Xem bài làm →
                                     </a>
+                                @elseif($isOverdue)
+                                    <button type="button" onclick="alert('Bài tập đã kết thúc! Bạn không thể làm bài này nữa.')" class="text-red-400 hover:text-red-300 text-sm cursor-pointer">
+                                        Bài tập đã kết thúc ✕
+                                    </button>
                                 @else
                                     <a href="{{ route('student.assignments.take', $assignment) }}" class="text-blue-400 hover:text-blue-300 text-sm">
                                         Làm bài →
@@ -137,12 +147,18 @@
                         @php
                             $gradeKey = 'App\\Models\\Quiz_'.$quiz->id;
                             $grade = $grades->get($gradeKey)?->first();
+                            $isOverdue = $quiz->due_date && $quiz->due_date->isPast();
                         @endphp
                         <div class="bg-gray-900 rounded p-4 border border-gray-700 hover:border-purple-500 transition">
                             <div class="flex justify-between items-start">
                                 <div>
                                     <p class="text-white font-semibold">{{ $quiz->title }}</p>
-                                    <p class="text-sm text-gray-400 mt-1">Hạn: {{ $quiz->due_date?->format('d/m/Y H:i') }}</p>
+                                    <p class="text-sm {{ $isOverdue && !$grade ? 'text-red-400' : 'text-gray-400' }} mt-1">
+                                        Hạn: {{ $quiz->due_date?->format('d/m/Y H:i') }}
+                                        @if($isOverdue && !$grade)
+                                            <span class="ml-2 text-xs bg-red-900 text-red-300 px-2 py-0.5 rounded">Đã hết hạn</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 @if($grade)
                                     <span class="text-green-400 text-sm">Điểm: {{ $grade->score }}/10</span>
@@ -153,6 +169,10 @@
                                     <a href="{{ route('student.quizzes.review', $quiz) }}" class="text-purple-300 hover:text-purple-200 text-sm">
                                         Xem bài làm →
                                     </a>
+                                @elseif($isOverdue)
+                                    <button type="button" onclick="alert('Bài kiểm tra đã kết thúc! Bạn không thể làm bài này nữa.')" class="text-red-400 hover:text-red-300 text-sm cursor-pointer">
+                                        Bài kiểm tra đã kết thúc ✕
+                                    </button>
                                 @else
                                     <a href="{{ route('student.quizzes.take', $quiz) }}" class="text-purple-400 hover:text-purple-300 text-sm">
                                         Làm bài →

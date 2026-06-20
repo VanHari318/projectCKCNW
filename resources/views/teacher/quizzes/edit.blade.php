@@ -46,6 +46,7 @@
                         <div class="flex gap-2">
                             <button type="button" class="text-xs text-purple-300" data-move="up">↑</button>
                             <button type="button" class="text-xs text-purple-300" data-move="down">↓</button>
+                            <button type="button" class="text-xs text-red-400 ml-2" data-action="delete">Xóa</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -104,6 +105,7 @@
             '  <div class="flex gap-2">' +
             '    <button type="button" class="text-xs text-purple-300" data-move="up">↑</button>' +
             '    <button type="button" class="text-xs text-purple-300" data-move="down">↓</button>' +
+            '    <button type="button" class="text-xs text-red-400 ml-2" data-action="delete">Xóa</button>' +
             '  </div>' +
             '</div>' +
             '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">' +
@@ -163,6 +165,16 @@
     });
 
     list.addEventListener('click', (event) => {
+        const deleteBtn = event.target.closest('button[data-action="delete"]');
+        if (deleteBtn) {
+            const question = deleteBtn.closest('[data-question]');
+            if (question) {
+                question.remove();
+                renumber();
+            }
+            return;
+        }
+
         const button = event.target.closest('button[data-move]');
         if (!button) return;
         const question = button.closest('[data-question]');

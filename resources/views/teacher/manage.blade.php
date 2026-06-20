@@ -59,11 +59,37 @@
                 <button type="button" class="btn-primary px-4 py-2 rounded" id="toggleQuestionPanel">
                     + Tạo bài tập / bài kiểm tra
                 </button>
-                <a href="{{ route('teacher.assignments.index') }}" class="btn-primary px-4 py-2 rounded">Source Bài tập/ Kiểm tra</a>
+                <a href="{{ route('teacher.quizzes.index') }}" class="btn-primary px-4 py-2 rounded flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.03 0 1.9.693 2.166 1.638m-7.377 0A48.536 48.536 0 0 1 12 3c.08 0 .16.002.24.005a4.5 4.5 0 0 1 5.305 6v10.5a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V6.108c0-1.135.845-2.098 1.976-2.192a48.567 48.567 0 0 1 1.123-.08Z" />
+                    </svg>
+                    + Quản lý bài tập / bài kiểm tra
+                </a>
             </div>
 
             <div class="flex flex-col gap-6 hidden" id="courseRoomPanel">
-                <div class="bg-gray-800 border border-blue-600 rounded-lg p-6">
+                <!-- Selection Group -->
+                <div class="bg-gray-800 border border-blue-600/60 rounded-xl p-6 shadow-xl">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Bạn muốn tạo gì?
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button type="button" id="selectCreateCourse" class="bg-gray-900 border border-gray-700 hover:border-blue-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
+                            <span class="text-3xl group-hover:scale-110 transition duration-200">📚</span>
+                            <span class="text-white font-bold">Tạo khóa học</span>
+                        </button>
+                        <button type="button" id="selectCreateRoom" class="bg-gray-900 border border-gray-700 hover:border-green-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
+                            <span class="text-3xl group-hover:scale-110 transition duration-200">🌐</span>
+                            <span class="text-white font-bold">Tạo phòng học</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Tạo khóa học Container -->
+                <div class="bg-gray-800 border border-blue-600 rounded-lg p-6 hidden transition-all duration-300" id="formCreateCourseContainer">
                     <h3 class="text-xl font-bold text-white mb-4">Tạo khóa học</h3>
                     <form method="POST" action="{{ route('teacher.courses.store', $classroom) }}" class="space-y-3">
                         @csrf
@@ -73,8 +99,9 @@
                     </form>
                 </div>
 
+                <!-- Form Tạo phòng học Container -->
                 @if($classroom->courses->count() > 0)
-                <div class="bg-gray-800 border border-green-600 rounded-lg p-6">
+                <div class="bg-gray-800 border border-green-600 rounded-lg p-6 hidden transition-all duration-300" id="formCreateRoomContainer">
                     <h3 class="text-xl font-bold text-white mb-4">Tạo phòng học</h3>
                     <form method="POST" action="{{ route('teacher.rooms.store', $classroom->courses->first()) }}" class="space-y-3" id="roomForm">
                         @csrf
@@ -99,69 +126,95 @@
             </div>
 
             <div class="bg-gray-800 border border-pink-600 rounded-lg p-6 hidden" id="questionPanel">
-                <h3 class="text-xl font-bold text-white mb-4">Tạo bài tập / bài kiểm tra</h3>
+                <!-- Selection Group -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-pink-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Bạn muốn tạo gì?
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button type="button" id="selectCreateAssignment" class="bg-gray-900 border border-gray-700 hover:border-pink-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
+                            <span class="text-3xl group-hover:scale-110 transition duration-200">📝</span>
+                            <span class="text-white font-bold">Tạo bài tập</span>
+                        </button>
+                        <button type="button" id="selectCreateQuiz" class="bg-gray-900 border border-gray-700 hover:border-pink-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
+                            <span class="text-3xl group-hover:scale-110 transition duration-200">⏱️</span>
+                            <span class="text-white font-bold">Tạo bài kiểm tra</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 gap-6">
-                    <form method="POST" action="{{ route('teacher.assignments.store') }}" class="space-y-4" data-question-form>
-                        @csrf
-                        <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <select name="scope" class="rounded form-input px-4 py-2" data-scope-select>
-                                <option value="course">Theo khóa học</option>
-                                <option value="classroom">Toàn lớp</option>
-                            </select>
-                            <select name="course_id" class="rounded form-input px-4 py-2 flex-1" data-course-select>
-                                @foreach($classroom->courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->name }}</option>
+                    <!-- Form Tạo bài tập Container -->
+                    <div id="formCreateAssignmentContainer" class="hidden transition-all duration-300 space-y-4">
+                        <h3 class="text-xl font-bold text-white">Tạo bài tập</h3>
+                        <form method="POST" action="{{ route('teacher.assignments.store') }}" class="space-y-4" data-question-form>
+                            @csrf
+                            <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
+                            <div class="flex flex-col md:flex-row gap-3">
+                                <select name="scope" class="rounded form-input px-4 py-2" data-scope-select>
+                                    <option value="course">Theo khóa học</option>
+                                    <option value="classroom">Toàn lớp</option>
+                                </select>
+                                <select name="course_id" class="rounded form-input px-4 py-2 flex-1" data-course-select>
+                                    @foreach($classroom->courses as $course)
+                                    <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <input list="assignmentTitles" id="assignmentTitle" type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài tập" required>
+                            <datalist id="assignmentTitles">
+                                @if(isset($teacherAssignments))
+                                @foreach($teacherAssignments as $ta)
+                                <option value="{{ $ta->title }}" data-id="{{ $ta->id }}"></option>
                                 @endforeach
-                            </select>
-                        </div>
-                        <!-- <input type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài tập" required> -->
-                        <input list="assignmentTitles" id="assignmentTitle" type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài tập" required>
-                        <datalist id="assignmentTitles">
-                            @if(isset($teacherAssignments))
-                            @foreach($teacherAssignments as $ta)
-                            <option value="{{ $ta->title }}" data-id="{{ $ta->id }}"></option>
-                            @endforeach
-                            @endif
-                        </datalist>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <input type="number" name="duration" class="w-full rounded form-input px-4 py-2" placeholder="Thời lượng (phút)" min="1" required>
-                            <input type="datetime-local" name="due_date" class="w-full rounded form-input px-4 py-2" required>
-                        </div>
+                                @endif
+                            </datalist>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input type="number" name="duration" class="w-full rounded form-input px-4 py-2" placeholder="Thời lượng (phút)" min="1" required>
+                                <input type="datetime-local" name="due_date" class="w-full rounded form-input px-4 py-2" required>
+                            </div>
 
-                        <div class="space-y-3" data-question-list></div>
-                        <div class="flex gap-3">
-                            <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>+ Thêm câu hỏi</button>
-                            <button type="submit" class="btn-primary px-4 py-2 rounded">Giao bài tập</button>
-                        </div>
-                    </form>
+                            <div class="space-y-3" data-question-list></div>
+                            <div class="flex gap-3">
+                                <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>+ Thêm câu hỏi</button>
+                                <button type="submit" class="btn-primary px-4 py-2 rounded">Giao bài tập</button>
+                            </div>
+                        </form>
+                    </div>
 
-                    <form method="POST" action="{{ route('teacher.quizzes.store') }}" class="space-y-4" data-question-form>
-                        @csrf
-                        <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <select name="scope" class="rounded form-input px-4 py-2" data-scope-select>
-                                <option value="course">Theo khóa học</option>
-                                <option value="classroom">Toàn lớp</option>
-                            </select>
-                            <select name="course_id" class="rounded form-input px-4 py-2 flex-1" data-course-select>
-                                @foreach($classroom->courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <input type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài kiểm tra" required>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <input type="number" name="duration" class="w-full rounded form-input px-4 py-2" placeholder="Thời lượng (phút)" min="1" required>
-                            <input type="datetime-local" name="due_date" class="w-full rounded form-input px-4 py-2" required>
-                        </div>
+                    <!-- Form Tạo bài kiểm tra Container -->
+                    <div id="formCreateQuizContainer" class="hidden transition-all duration-300 space-y-4">
+                        <h3 class="text-xl font-bold text-white">Tạo bài kiểm tra</h3>
+                        <form method="POST" action="{{ route('teacher.quizzes.store') }}" class="space-y-4" data-question-form>
+                            @csrf
+                            <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
+                            <div class="flex flex-col md:flex-row gap-3">
+                                <select name="scope" class="rounded form-input px-4 py-2" data-scope-select>
+                                    <option value="course">Theo khóa học</option>
+                                    <option value="classroom">Toàn lớp</option>
+                                </select>
+                                <select name="course_id" class="rounded form-input px-4 py-2 flex-1" data-course-select>
+                                    @foreach($classroom->courses as $course)
+                                    <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <input type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài kiểm tra" required>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input type="number" name="duration" class="w-full rounded form-input px-4 py-2" placeholder="Thời lượng (phút)" min="1" required>
+                                <input type="datetime-local" name="due_date" class="w-full rounded form-input px-4 py-2" required>
+                            </div>
 
-                        <div class="space-y-3" data-question-list></div>
-                        <div class="flex gap-3">
-                            <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>+ Thêm câu hỏi</button>
-                            <button type="submit" class="btn-primary px-4 py-2 rounded">Tạo bài kiểm tra</button>
-                        </div>
-                    </form>
+                            <div class="space-y-3" data-question-list></div>
+                            <div class="flex gap-3">
+                                <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>+ Thêm câu hỏi</button>
+                                <button type="submit" class="btn-primary px-4 py-2 rounded">Tạo bài kiểm tra</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -392,6 +445,7 @@
             '  <div class="flex gap-2">' +
             '    <button type="button" class="text-xs text-purple-300" data-move="up">↑</button>' +
             '    <button type="button" class="text-xs text-purple-300" data-move="down">↓</button>' +
+            '    <button type="button" class="text-xs text-red-400 ml-2" data-action="delete">Xóa</button>' +
             '  </div>' +
             '</div>' +
             '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">' +
@@ -461,6 +515,16 @@
         });
 
         list.addEventListener('click', (event) => {
+            const deleteBtn = event.target.closest('button[data-action="delete"]');
+            if (deleteBtn) {
+                const question = deleteBtn.closest('[data-question]');
+                if (question) {
+                    question.remove();
+                    renumberQuestions(list);
+                }
+                return;
+            }
+
             const button = event.target.closest('button[data-move]');
             if (!button) return;
             const question = button.closest('[data-question]');
@@ -508,6 +572,69 @@
     if (toggleClassroom && classroomDetails) {
         toggleClassroom.addEventListener('click', () => {
             classroomDetails.open = !classroomDetails.open;
+        });
+    }
+
+    // Custom Sub-Form Selectors logic
+    const selectCreateCourse = document.getElementById('selectCreateCourse');
+    const selectCreateRoom = document.getElementById('selectCreateRoom');
+    const formCreateCourseContainer = document.getElementById('formCreateCourseContainer');
+    const formCreateRoomContainer = document.getElementById('formCreateRoomContainer');
+
+    if (selectCreateCourse && formCreateCourseContainer) {
+        selectCreateCourse.addEventListener('click', () => {
+            formCreateCourseContainer.classList.remove('hidden');
+            if (formCreateRoomContainer) formCreateRoomContainer.classList.add('hidden');
+            selectCreateCourse.classList.add('border-blue-500', 'bg-blue-900/20');
+            selectCreateCourse.classList.remove('border-gray-700');
+            if (selectCreateRoom) {
+                selectCreateRoom.classList.remove('border-green-500', 'bg-green-900/20');
+                selectCreateRoom.classList.add('border-gray-700');
+            }
+        });
+    }
+
+    if (selectCreateRoom && formCreateRoomContainer) {
+        selectCreateRoom.addEventListener('click', () => {
+            if (formCreateRoomContainer) formCreateRoomContainer.classList.remove('hidden');
+            formCreateCourseContainer.classList.add('hidden');
+            selectCreateRoom.classList.add('border-green-500', 'bg-green-900/20');
+            selectCreateRoom.classList.remove('border-gray-700');
+            if (selectCreateCourse) {
+                selectCreateCourse.classList.remove('border-blue-500', 'bg-blue-900/20');
+                selectCreateCourse.classList.add('border-gray-700');
+            }
+        });
+    }
+
+    const selectCreateAssignment = document.getElementById('selectCreateAssignment');
+    const selectCreateQuiz = document.getElementById('selectCreateQuiz');
+    const formCreateAssignmentContainer = document.getElementById('formCreateAssignmentContainer');
+    const formCreateQuizContainer = document.getElementById('formCreateQuizContainer');
+
+    if (selectCreateAssignment && formCreateAssignmentContainer) {
+        selectCreateAssignment.addEventListener('click', () => {
+            formCreateAssignmentContainer.classList.remove('hidden');
+            formCreateQuizContainer.classList.add('hidden');
+            selectCreateAssignment.classList.add('border-pink-500', 'bg-pink-900/20');
+            selectCreateAssignment.classList.remove('border-gray-700');
+            if (selectCreateQuiz) {
+                selectCreateQuiz.classList.remove('border-pink-500', 'bg-pink-900/20');
+                selectCreateQuiz.classList.add('border-gray-700');
+            }
+        });
+    }
+
+    if (selectCreateQuiz && formCreateQuizContainer) {
+        selectCreateQuiz.addEventListener('click', () => {
+            formCreateQuizContainer.classList.remove('hidden');
+            formCreateAssignmentContainer.classList.add('hidden');
+            selectCreateQuiz.classList.add('border-pink-500', 'bg-pink-900/20');
+            selectCreateQuiz.classList.remove('border-gray-700');
+            if (selectCreateAssignment) {
+                selectCreateAssignment.classList.remove('border-pink-500', 'bg-pink-900/20');
+                selectCreateAssignment.classList.add('border-gray-700');
+            }
         });
     }
 </script>
