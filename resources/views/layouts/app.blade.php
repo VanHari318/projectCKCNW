@@ -66,10 +66,18 @@
                         <span class="text-gray-300">Xin chào, <span class="text-purple-400">{{ auth()->user()->name }}</span></span>
                         <span class="text-gray-500">|</span>
 
+                        <!-- Profile Icon -->
+                        <a href="{{ route('profile.show') }}" class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-purple-700 text-white hover:bg-purple-500 transition" title="Hồ sơ cá nhân" aria-label="Hồ sơ cá nhân">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5Z" />
+                            </svg>
+                        </a>
+
                         @if(auth()->user()->isStudent())
-                            <a href="{{ route('student.info') }}" class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-purple-700 text-white hover:bg-purple-500 transition" title="Thông tin học sinh" aria-label="Thông tin học sinh">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                    <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5Z" />
+                            <!-- Gradebook Icon -->
+                            <a href="{{ route('student.info') }}" class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition" title="Bảng điểm học sinh" aria-label="Bảng điểm học sinh">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v5.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 3 18.375v-5.25ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125v-9.75ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v14.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
                                 </svg>
                             </a>
                         @endif
