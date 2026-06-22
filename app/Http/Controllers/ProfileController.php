@@ -35,6 +35,17 @@ class ProfileController extends Controller
     }
 
     /**
+     * Show the form for editing the authenticated user's profile.
+     */
+    public function edit()
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return view('profile.edit', compact('user'));
+    }
+
+    /**
      * Update the authenticated user's profile (name, email, password).
      */
     public function update(Request $request)

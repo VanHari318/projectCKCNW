@@ -8,14 +8,14 @@
 
     <div class="bg-gray-800 p-4 rounded mb-4 flex flex-wrap items-center gap-4">
         <div>
-            <label class="text-sm text-gray-300">Loại:</label>
+            <label class="text-sm text-gray-300">{{ __('Loại') }}:</label>
             <select id="filterType" class="ml-2 rounded form-input px-3 py-1">
                 <option value="assignment">Bài tập</option>
                 <option value="quiz" selected>Bài kiểm tra</option>
             </select>
         </div>
         <div>
-            <label class="text-sm text-gray-300">Khóa học:</label>
+            <label class="text-sm text-gray-300">{{ __('Khóa học') }}:</label>
             <select id="filterCourse" class="ml-2 rounded form-input px-3 py-1">
                 <option value="all">Tất cả</option>
                 @foreach($courses as $course)
@@ -41,8 +41,8 @@
                         <div class="flex justify-between items-center">
                             <button type="button" class="text-left flex-1 text-white font-medium title-toggle">{{ $a->title }}</button>
                             <div class="ml-4 flex items-center gap-2">
-                                <button type="button" class="text-yellow-300 px-2 py-1 rounded repost-btn" data-type="assignment" data-id="{{ $a->id }}" data-title="{{ $a->title }}" data-questions='@json($a->questions)'>Đăng lại</button>
-                                <a href="{{ route('teacher.assignments.edit', $a) }}" class="text-purple-300 px-2 py-1 rounded">Sửa</a>
+                                <button type="button" class="text-yellow-300 px-2 py-1 rounded repost-btn" data-type="assignment" data-id="{{ $a->id }}" data-title="{{ $a->title }}" data-questions='@json($a->questions)'>{{ __('Đăng lại') }}</button>
+                                <a href="{{ route('teacher.assignments.edit', $a) }}" class="text-purple-300 px-2 py-1 rounded">{{ __('Sửa') }}</a>
                             </div>
                         </div>
                         <div class="mt-2 text-sm text-gray-300 hidden detail-content">
@@ -91,8 +91,8 @@
                         <div class="flex justify-between items-center">
                             <button type="button" class="text-left flex-1 text-white font-medium title-toggle">{{ $qz->title }}</button>
                             <div class="ml-4 flex items-center gap-2">
-                                <button type="button" class="text-yellow-300 px-2 py-1 rounded repost-btn" data-type="quiz" data-id="{{ $qz->id }}" data-title="{{ $qz->title }}" data-questions='@json($qz->questions)'>Đăng lại</button>
-                                <a href="{{ route('teacher.quizzes.edit', $qz) }}" class="text-purple-300 px-2 py-1 rounded">Sửa</a>
+                                <button type="button" class="text-yellow-300 px-2 py-1 rounded repost-btn" data-type="quiz" data-id="{{ $qz->id }}" data-title="{{ $qz->title }}" data-questions='@json($qz->questions)'>{{ __('Đăng lại') }}</button>
+                                <a href="{{ route('teacher.quizzes.edit', $qz) }}" class="text-purple-300 px-2 py-1 rounded">{{ __('Sửa') }}</a>
                             </div>
                         </div>
                         <div class="mt-2 text-sm text-gray-300 hidden detail-content">
@@ -128,7 +128,7 @@
     </div>
 
     <div class="mt-6">
-        <a href="{{ url()->previous() }}" class="btn-primary px-4 py-2 rounded">Thoát</a>
+        <a href="{{ url()->previous() }}" class="btn-primary px-4 py-2 rounded">{{ __('Thoát') }}</a>
     </div>
 </div>
 

@@ -19,6 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Locale is set via middleware `SetLocale` registered in bootstrap/app.php
     }
 }

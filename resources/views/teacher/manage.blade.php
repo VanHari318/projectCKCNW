@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Quản lý lớp học')
+@section('title', __('Quản lý lớp học'))
 
 @section('content')
 <div class="flex flex-col gap-8">
     <div>
-        <h1 class="text-3xl font-bold text-white mb-2">Quản lý <span class="text-purple-500">Lớp Học</span></h1>
-        <p class="text-gray-400">Tạo và quản lý lớp học của bạn</p>
+        <h1 class="text-3xl font-bold text-white mb-2">{{ __('Quản lý') }} <span class="text-purple-500">{{ __('Lớp Học') }}</span></h1>
+        <p class="text-gray-400">{{ __('Tạo và quản lý lớp học của bạn') }}</p>
     </div>
 
     @if(!$classroom)
     <div class="bg-gray-800 border border-purple-600 rounded-lg p-6 max-w-2xl">
-        <h2 class="text-xl font-bold text-white mb-4">Tạo lớp học mới</h2>
+        <h2 class="text-xl font-bold text-white mb-4">{{ __('Tạo lớp học mới') }}</h2>
         <form method="POST" action="{{ route('teacher.classrooms.store') }}" class="space-y-4">
             @csrf
-            <input type="text" name="name" class="w-full rounded form-input px-4 py-2" placeholder="Tên lớp học" required>
-            <button type="submit" class="btn-primary px-4 py-2 rounded w-full">Tạo lớp</button>
+            <input type="text" name="name" class="w-full rounded form-input px-4 py-2" placeholder="{{ __('Tên lớp học') }}" required>
+            <button type="submit" class="btn-primary px-4 py-2 rounded w-full">{{ __('Tạo lớp') }}</button>
         </form>
     </div>
     @else
@@ -23,47 +23,47 @@
         <summary class="cursor-pointer list-none flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-white">{{ $classroom->name }}</h2>
-                <p class="text-gray-400">Mã: <span class="font-mono text-purple-300">{{ $classroom->code }}</span></p>
+                <p class="text-gray-400">{{__('Mã')}}: <span class="font-mono text-purple-300">{{ $classroom->code }}</span></p>
             </div>
             <div class="flex items-center gap-3">
-                <button type="button" class="btn-primary px-3 py-1 rounded" id="toggleClassroom">Xem chi tiết</button>
-                <form method="POST" action="{{ route('teacher.classrooms.destroy', $classroom) }}" onsubmit="return confirm('Xóa lớp học?')" style="display:inline;">
+                <button type="button" class="btn-primary px-3 py-1 rounded" id="toggleClassroom">{{ __('Xem chi tiết') }}</button>
+                <form method="POST" action="{{ route('teacher.classrooms.destroy', $classroom) }}" onsubmit="return confirm('{{ __("Xóa lớp học?") }}')" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-red-400 hover:text-red-300">Xóa lớp</button>
+                    <button type="submit" class="text-red-400 hover:text-red-300">{{ __('Xóa lớp') }}</button>
                 </form>
             </div>
         </summary>
-        <p class="text-gray-400 text-sm mt-2">Bấm "Xem chi tiết" để hiện phần tạo khóa học, phòng học và bài tập.</p>
+        <p class="text-gray-400 text-sm mt-2">{{ __('Bấm Xem chi tiết để hiện phần tạo khóa học, phòng học và bài tập.') }}</p>
 
         <div class="mt-6 flex flex-col gap-6">
             <div class="grid grid-cols-3 gap-4">
                 <div class="bg-gray-900 p-3 rounded border border-gray-700">
-                    <p class="text-gray-400 text-sm">Sinh viên</p>
+                    <p class="text-gray-400 text-sm">{{ __('Sinh viên') }}</p>
                     <p class="text-2xl font-bold text-green-400">{{ $classroom->students->count() }}</p>
                 </div>
                 <div class="bg-gray-900 p-3 rounded border border-gray-700">
-                    <p class="text-gray-400 text-sm">Khóa học</p>
+                    <p class="text-gray-400 text-sm">{{ __('Khóa học') }}</p>
                     <p class="text-2xl font-bold text-blue-400">{{ $classroom->courses->count() }}</p>
                 </div>
                 <div class="bg-gray-900 p-3 rounded border border-gray-700">
-                    <p class="text-gray-400 text-sm">Phòng học</p>
+                    <p class="text-gray-400 text-sm">{{ __('Phòng học') }}</p>
                     <p class="text-2xl font-bold text-purple-400">{{ $classroom->courses->sum(fn($c) => $c->rooms->count()) }}</p>
                 </div>
             </div>
 
             <div class="flex flex-wrap gap-3 justify-end">
                 <button type="button" class="btn-primary px-4 py-2 rounded" id="toggleCourseRoom">
-                    + Tạo khóa học / phòng học
+                    + {{ __('Tạo khóa học / phòng học') }}
                 </button>
                 <button type="button" class="btn-primary px-4 py-2 rounded" id="toggleQuestionPanel">
-                    + Tạo bài tập / bài kiểm tra
+                    + {{ __('Tạo bài tập / bài kiểm tra') }}
                 </button>
                 <a href="{{ route('teacher.quizzes.index') }}" class="btn-primary px-4 py-2 rounded flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.03 0 1.9.693 2.166 1.638m-7.377 0A48.536 48.536 0 0 1 12 3c.08 0 .16.002.24.005a4.5 4.5 0 0 1 5.305 6v10.5a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V6.108c0-1.135.845-2.098 1.976-2.192a48.567 48.567 0 0 1 1.123-.08Z" />
                     </svg>
-                    + Quản lý bài tập / bài kiểm tra
+                    + {{ __('Quản lý bài tập / bài kiểm tra') }}
                 </a>
             </div>
 
@@ -74,35 +74,35 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        Bạn muốn tạo gì?
+                        {{ __('Bạn muốn tạo gì?') }}
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <button type="button" id="selectCreateCourse" class="bg-gray-900 border border-gray-700 hover:border-blue-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
                             <span class="text-3xl group-hover:scale-110 transition duration-200">📚</span>
-                            <span class="text-white font-bold">Tạo khóa học</span>
+                            <span class="text-white font-bold">{{ __('Tạo khóa học') }}</span>
                         </button>
                         <button type="button" id="selectCreateRoom" class="bg-gray-900 border border-gray-700 hover:border-green-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
                             <span class="text-3xl group-hover:scale-110 transition duration-200">🌐</span>
-                            <span class="text-white font-bold">Tạo phòng học</span>
+                            <span class="text-white font-bold">{{ __('Tạo phòng học') }}</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Form Tạo khóa học Container -->
                 <div class="bg-gray-800 border border-blue-600 rounded-lg p-6 hidden transition-all duration-300" id="formCreateCourseContainer">
-                    <h3 class="text-xl font-bold text-white mb-4">Tạo khóa học</h3>
+                    <h3 class="text-xl font-bold text-white mb-4">{{ __('Tạo khóa học') }}</h3>
                     <form method="POST" action="{{ route('teacher.courses.store', $classroom) }}" class="space-y-3">
                         @csrf
-                        <input type="text" name="name" class="w-full rounded form-input px-4 py-2" placeholder="Tên khóa học" required>
-                        <textarea name="description" rows="2" class="w-full rounded form-input px-4 py-2" placeholder="Mô tả (tùy chọn)"></textarea>
-                        <button type="submit" class="btn-primary px-4 py-2 rounded w-full">Tạo khóa học</button>
+                        <input type="text" name="name" class="w-full rounded form-input px-4 py-2" placeholder="{{ __('Tên khóa học') }}" required>
+                        <textarea name="description" rows="2" class="w-full rounded form-input px-4 py-2" placeholder="{{ __('Mô tả (tùy chọn)') }}"></textarea>
+                        <button type="submit" class="btn-primary px-4 py-2 rounded w-full">{{ __('Tạo khóa học') }}</button>
                     </form>
                 </div>
 
                 <!-- Form Tạo phòng học Container -->
                 @if($classroom->courses->count() > 0)
                 <div class="bg-gray-800 border border-green-600 rounded-lg p-6 hidden transition-all duration-300" id="formCreateRoomContainer">
-                    <h3 class="text-xl font-bold text-white mb-4">Tạo phòng học</h3>
+                    <h3 class="text-xl font-bold text-white mb-4">{{ __('Tạo phòng học') }}</h3>
                     <form method="POST" action="{{ route('teacher.rooms.store', $classroom->courses->first()) }}" class="space-y-3" id="roomForm">
                         @csrf
                         <select name="course_id" class="w-full rounded form-input px-4 py-2" onchange="updateRoomForm(this.value)">
@@ -119,7 +119,7 @@
                             <input type="url" name="join_url" id="join_url" class="w-full rounded form-input px-4 py-2" placeholder="Link Zoom/Teams">
                         </div>
                         <input type="datetime-local" name="scheduled_at" class="w-full rounded form-input px-4 py-2" required>
-                        <button type="submit" class="btn-primary px-4 py-2 rounded w-full">Tạo phòng</button>
+                        <button type="submit" class="btn-primary px-4 py-2 rounded w-full">{{ __('Tạo phòng') }}</button>
                     </form>
                 </div>
                 @endif
@@ -132,16 +132,16 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-pink-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        Bạn muốn tạo gì?
+                        {{ __('Bạn muốn tạo gì?') }}
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <button type="button" id="selectCreateAssignment" class="bg-gray-900 border border-gray-700 hover:border-pink-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
                             <span class="text-3xl group-hover:scale-110 transition duration-200">📝</span>
-                            <span class="text-white font-bold">Tạo bài tập</span>
+                            <span class="text-white font-bold">{{ __('Tạo bài tập') }}</span>
                         </button>
                         <button type="button" id="selectCreateQuiz" class="bg-gray-900 border border-gray-700 hover:border-pink-500 rounded-xl p-4 text-center transition flex flex-col items-center justify-center gap-2 group">
                             <span class="text-3xl group-hover:scale-110 transition duration-200">⏱️</span>
-                            <span class="text-white font-bold">Tạo bài kiểm tra</span>
+                            <span class="text-white font-bold">{{ __('Tạo bài kiểm tra') }}</span>
                         </button>
                     </div>
                 </div>
@@ -149,14 +149,14 @@
                 <div class="grid grid-cols-1 gap-6">
                     <!-- Form Tạo bài tập Container -->
                     <div id="formCreateAssignmentContainer" class="hidden transition-all duration-300 space-y-4">
-                        <h3 class="text-xl font-bold text-white">Tạo bài tập</h3>
+                        <h3 class="text-xl font-bold text-white">{{ __('Tạo bài tập') }}</h3>
                         <form method="POST" action="{{ route('teacher.assignments.store') }}" class="space-y-4" data-question-form>
                             @csrf
                             <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
                             <div class="flex flex-col md:flex-row gap-3">
                                 <select name="scope" class="rounded form-input px-4 py-2" data-scope-select>
-                                    <option value="course">Theo khóa học</option>
-                                    <option value="classroom">Toàn lớp</option>
+                                    <option value="course">{{ __('Theo khóa học') }}</option>
+                                    <option value="classroom">{{ __('Toàn lớp') }}</option>
                                 </select>
                                 <select name="course_id" class="rounded form-input px-4 py-2 flex-1" data-course-select>
                                     @foreach($classroom->courses as $course)
@@ -164,7 +164,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <input list="assignmentTitles" id="assignmentTitle" type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài tập" required>
+                            <input list="assignmentTitles" id="assignmentTitle" type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="{{ __('Tên bài tập') }}" required>
                             <datalist id="assignmentTitles">
                                 @if(isset($teacherAssignments))
                                 @foreach($teacherAssignments as $ta)
@@ -179,7 +179,7 @@
 
                             <div class="space-y-3" data-question-list></div>
                             <div class="flex gap-3">
-                                <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>+ Thêm câu hỏi</button>
+                                <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>  + Thêm câu hỏi</button>
                                 <button type="submit" class="btn-primary px-4 py-2 rounded">Giao bài tập</button>
                             </div>
                         </form>
@@ -187,7 +187,7 @@
 
                     <!-- Form Tạo bài kiểm tra Container -->
                     <div id="formCreateQuizContainer" class="hidden transition-all duration-300 space-y-4">
-                        <h3 class="text-xl font-bold text-white">Tạo bài kiểm tra</h3>
+                        <h3 class="text-xl font-bold text-white">{{ __('Tạo bài kiểm tra') }}</h3>
                         <form method="POST" action="{{ route('teacher.quizzes.store') }}" class="space-y-4" data-question-form>
                             @csrf
                             <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
@@ -202,16 +202,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <input type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="Tên bài kiểm tra" required>
+                            <input type="text" name="title" class="w-full rounded form-input px-4 py-2" placeholder="{{ __('Tên bài kiểm tra') }}" required>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <input type="number" name="duration" class="w-full rounded form-input px-4 py-2" placeholder="Thời lượng (phút)" min="1" required>
+                                <input type="number" name="duration" class="w-full rounded form-input px-4 py-2" placeholder="{{ __('Thời lượng (phút)') }}" min="1" required>
                                 <input type="datetime-local" name="due_date" class="w-full rounded form-input px-4 py-2" required>
                             </div>
 
                             <div class="space-y-3" data-question-list></div>
                             <div class="flex gap-3">
                                 <button type="button" class="btn-primary px-4 py-2 rounded" data-add-question>+ Thêm câu hỏi</button>
-                                <button type="submit" class="btn-primary px-4 py-2 rounded">Tạo bài kiểm tra</button>
+                                <button type="submit" class="btn-primary px-4 py-2 rounded">{{ __('Tạo bài kiểm tra') }}</button>
                             </div>
                         </form>
                     </div>
@@ -219,7 +219,7 @@
             </div>
 
             <div class="bg-gray-800 border border-yellow-600 rounded-lg p-6">
-                <h3 class="text-lg font-bold text-white mb-4">Sinh viên chờ duyệt</h3>
+                <h3 class="text-lg font-bold text-white mb-4">{{ __('Sinh viên chờ duyệt') }}</h3>
                 @forelse($pendingStudents as $student)
                 <div class="flex justify-between items-center bg-gray-900 p-3 rounded mb-2 border border-gray-700">
                     <div>
@@ -228,17 +228,17 @@
                     </div>
                     <form method="POST" action="{{ route('teacher.students.approve', ['classroom' => $classroom, 'student' => $student]) }}" style="display:inline;">
                         @csrf
-                        <button type="submit" class="text-green-400 hover:text-green-300 text-sm">✓ Duyệt</button>
+                        <button type="submit" class="text-green-400 hover:text-green-300 text-sm">✓ {{ __('Duyệt') }}</button>
                     </form>
                 </div>
                 @empty
-                <p class="text-gray-400">Không có sinh viên chờ duyệt.</p>
+                <p class="text-gray-400">{{ __('Không có sinh viên chờ duyệt.') }}</p>
                 @endforelse
             </div>
 
             @if($classroom->courses->count() > 0)
             <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
-                <h3 class="text-lg font-bold text-white mb-4">Khóa học</h3>
+                <h3 class="text-lg font-bold text-white mb-4">{{ __('Khóa học') }}</h3>
                 @foreach($classroom->courses as $course)
                 <details class="bg-gray-900 p-4 rounded mb-3 border border-gray-700">
                     <summary class="cursor-pointer list-none">
@@ -253,7 +253,7 @@
                                 <button type="submit" class="text-red-400 hover:text-red-300 text-sm">Xóa</button>
                             </form>
                         </div>
-                        <p class="text-xs text-gray-400">Bấm để xem bài tập và bài kiểm tra</p>
+                        <p class="text-xs text-gray-400">{{ __('Bấm để xem bài tập và bài kiểm tra') }}</p>
                     </summary>
 
                     @if($course->rooms->count() > 0)
@@ -390,7 +390,7 @@
 
             @if($approvedStudents->count() > 0)
             <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
-                <h3 class="text-lg font-bold text-white mb-4">Sinh viên ({{ $approvedStudents->count() }})</h3>
+                <h3 class="text-lg font-bold text-white mb-4">{{ __('Sinh viên') }} ({{ $approvedStudents->count() }})</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     @foreach($approvedStudents as $student)
                     <div class="bg-gray-900 p-3 rounded border border-gray-700 flex justify-between">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Nhập</title>
+    <title>{{ __('Đăng Nhập') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900">
@@ -12,15 +12,15 @@
             <!-- Header -->
             <div class="text-center">
                 <h2 class="text-4xl font-bold text-white mb-2">
-                    <span class="text-purple-500">Đăng Nhập</span> Tài Khoản
+                    <span class="text-purple-500">{{ __('Đăng Nhập') }}</span> {{ __('Tài Khoản') }}
                 </h2>
-                <p class="text-gray-400">Đăng nhập để tiếp tục học tập</p>
+                <p class="text-gray-400">{{ __('Đăng nhập để tiếp tục học tập') }}</p>
             </div>
 
             <!-- Flash Messages -->
             @if($errors->any())
                 <div class="bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded">
-                    <strong>Lỗi!</strong>
+                    <strong>{{ __('Lỗi!') }}</strong>
                     <ul>
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -59,14 +59,14 @@
                 <!-- Password Field -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
-                        Mật Khẩu
+                        {{ __('Mật Khẩu') }}
                     </label>
                     <input 
                         type="password" 
                         id="password" 
                         name="password" 
                         required
-                        placeholder="Nhập mật khẩu"
+                        placeholder="{{ __('Nhập mật khẩu') }}"
                         class="w-full px-4 py-2 bg-gray-700 border border-purple-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                 </div>
@@ -79,7 +79,7 @@
                         {{ old('remember') ? 'checked' : '' }}
                         class="w-4 h-4 text-purple-500 bg-gray-700 border-gray-600 rounded"
                     >
-                    <span class="ml-2 text-sm text-gray-300">Ghi nhớ tôi</span>
+                    <span class="ml-2 text-sm text-gray-300">{{ __('Ghi nhớ tôi') }}</span>
                 </label>
 
                 <!-- Submit Button -->
@@ -87,21 +87,21 @@
                     type="submit" 
                     class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg"
                 >
-                    Đăng Nhập
+                    {{ __('Đăng Nhập') }}
                 </button>
 
                 <!-- Register Link -->
                 <p class="text-center text-gray-400 text-sm">
-                    Chưa có tài khoản?
+                    {{ __('Chưa có tài khoản?') }}
                     <a href="{{ route('register') }}" class="text-purple-400 hover:text-purple-300 font-medium">
-                        Đăng kí
+                        {{ __('Đăng Kí') }}
                     </a>
                 </p>
             </form>
 
             <!-- Demo Info -->
             <div class="mt-6 p-4 bg-purple-900 bg-opacity-30 border border-purple-700 rounded-lg text-sm text-gray-300">
-                <p class="font-semibold text-purple-300 mb-2">Tài khoản demo:</p>
+                <p class="font-semibold text-purple-300 mb-2">{{ __('Tài khoản demo:') }}</p>
                 <p>👨‍🏫 Teacher: teacher@example.com / password</p>
                 <p>👨‍🎓 Student: student@example.com / password</p>
             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nhóm chat khóa học')
+@section('title', __('Nhóm chat khóa học'))
 
 @section('content')
 <div class="max-w-6xl mx-auto bg-gray-900 border border-purple-500/30 rounded-2xl overflow-hidden shadow-2xl flex h-[650px]">
@@ -9,9 +9,9 @@
     <div class="w-full md:w-80 border-r border-purple-500/20 flex flex-col bg-[#141426]">
         
         <div class="p-4 border-b border-purple-500/20 bg-[#0f0f1e] flex items-center justify-between">
-            <h2 class="text-sm font-bold text-gray-200 uppercase tracking-wider">Nhóm học phần</h2>
+            <h2 class="text-sm font-bold text-gray-200 uppercase tracking-wider">{{ __('Nhóm học phần') }}</h2>
             <span class="text-xs bg-purple-900/60 text-purple-300 font-medium px-2 py-0.5 rounded-full border border-purple-700/30">
-                {{ count($courses) }} Nhóm
+                {{ count($courses) }} {{ __('Nhóm') }}
             </span>
         </div>
 
@@ -37,9 +37,9 @@
                         <div class="flex items-center justify-between mt-0.5">
                             <p class="text-xs text-gray-400 truncate flex-1 pr-2" id="last-message-course-{{ $course->id }}">
                                 @if($course->last_message)
-                                    <span class="text-purple-400 font-medium">{{ $course->last_message_sender == auth()->user()->name ? 'Bạn' : $course->last_message_sender }}: </span>{{ $course->last_message }}
+                                    <span class="text-purple-400 font-medium">{{ $course->last_message_sender == auth()->user()->name ? __('Bạn') : $course->last_message_sender }}: </span>{{ $course->last_message }}
                                 @else
-                                    <span class="text-gray-500 italic">Chưa có tin nhắn nhóm</span>
+                                    <span class="text-gray-500 italic">{{ __('Chưa có tin nhắn nhóm') }}</span>
                                 @endif
                             </p>
                         </div>
@@ -47,7 +47,7 @@
                 </button>
             @empty
                 <div class="p-8 text-center text-xs text-gray-500">
-                    Bạn chưa tham gia khóa học nào có nhóm chat.
+                    {{ __('Bạn chưa tham gia khóa học nào có nhóm chat.') }}
                 </div>
             @endforelse
         </div>
@@ -63,8 +63,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                 </svg>
             </div>
-            <h2 class="text-xl font-bold text-gray-200">Nhóm Chat Khóa Học</h2>
-            <p class="text-sm text-gray-400 mt-2 max-w-sm">Chọn một nhóm học phần ở bên trái để bắt đầu thảo luận với giáo viên và các học sinh khác trong khóa học.</p>
+            <h2 class="text-xl font-bold text-gray-200">{{ __('Nhóm Chat Khóa Học') }}</h2>
+            <p class="text-sm text-gray-400 mt-2 max-w-sm">{{ __('Chọn một nhóm học phần ở bên trái để bắt đầu thảo luận với giáo viên và các học sinh khác trong khóa học.') }}</p>
         </div>
 
         <!-- Chat Header (Ẩn ban đầu) -->
@@ -97,7 +97,7 @@
                 <input 
                     type="text" 
                     id="message-input" 
-                    placeholder="Nhập tin nhắn nhóm..." 
+                    placeholder="{{ __('Nhập tin nhắn nhóm...') }}" 
                     autocomplete="off"
                     class="flex-1 bg-[#1e1e32] text-gray-200 placeholder-gray-500 text-sm rounded-xl px-4 py-3 border border-purple-500/20 focus:outline-none focus:border-purple-500 transition"
                 >

@@ -17,8 +17,20 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+// Test locale (for debugging)
+Route::get('/test-locale', function () {
+    return response()->json([
+        'current_locale' => app()->getLocale(),
+        'session_locale' => session()->get('locale'),
+        'cookie_locale' => request()->cookie('locale'),
+        'config_locale' => config('app.locale'),
+        'locale_switch_url_en' => route('locale.switch', 'en'),
+        'locale_switch_url_vi' => route('locale.switch', 'vi'),
+    ]);
+})->middleware('setlocale');
+
 // Authentication Routes
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest','setlocale'])->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 
@@ -27,12 +39,13 @@ Route::middleware('guest')->group(function () {
 });
 
 // Protected Routes - Require Authentication
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','setlocale'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Logout
@@ -129,3 +142,16 @@ Route::middleware('auth')->group(function () {
             ->name('teacher.students.remove');
     });
 });
+
+// Locale switch (language selector) - accessible to all
+Route::get('/locale/{locale}', function ($locale) {
+    $allowed = ['en', 'vi'];
+    if (in_array($locale, $allowed)) {
+        session(['locale' => $locale]);
+    }
+    $response = redirect()->back();
+    if (in_array($locale, $allowed)) {
+        $response->cookie('locale', $locale, 60 * 60 * 24 * 365); // 1 year
+    }
+    return $response;
+})->name('locale.switch')->middleware('web');
