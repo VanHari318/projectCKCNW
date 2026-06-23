@@ -10,7 +10,7 @@ RUN npm ci && npm run build
 FROM php:8.2-fpm-alpine
 
 # Install system dependencies & build tools for PHP extensions
-RUN apk add --no-nginx --no-cache \
+RUN apk add --no-cache \
     nginx \
     libpng-dev \
     libzip-dev \
