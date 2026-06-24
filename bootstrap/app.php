@@ -11,6 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'checkrole' => \App\Http\Middleware\CheckRole::class,
             'setlocale' => \App\Http\Middleware\SetLocale::class,
