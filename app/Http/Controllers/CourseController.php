@@ -141,7 +141,7 @@ class CourseController extends Controller
 
         $course->delete();
 
-        return redirect()->route('classroom.show', $classroom->id)->with('success', 'Xóa khóa học thành công.');
+        return redirect()->route('teacher.manage')->with('success', 'Xóa khóa học thành công.');
     }
 
     public function join(Course $course)
@@ -176,6 +176,6 @@ class CourseController extends Controller
 
         $course->students()->detach($user->id);
 
-        return redirect()->route('classroom.show', $course->classroom_id)->with('success', 'Bạn đã rời khỏi khóa học.');
+        return redirect()->route('student.classrooms.show', $course->classroom_id)->with('success', 'Bạn đã rời khỏi khóa học.');
     }
 }
