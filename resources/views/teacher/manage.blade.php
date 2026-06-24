@@ -100,9 +100,9 @@
                 </div>
 
                 <!-- Form Tạo phòng học Container -->
-                @if($classroom->courses->count() > 0)
                 <div class="bg-gray-800 border border-green-600 rounded-lg p-6 hidden transition-all duration-300" id="formCreateRoomContainer">
                     <h3 class="text-xl font-bold text-white mb-4">{{ __('Tạo phòng học') }}</h3>
+                    @if($classroom->courses->count() > 0)
                     <form method="POST" action="{{ route('teacher.rooms.store', $classroom->courses->first()) }}" class="space-y-3" id="roomForm">
                         @csrf
                         <select name="course_id" class="w-full rounded form-input px-4 py-2" onchange="updateRoomForm(this.value)">
@@ -121,8 +121,12 @@
                         <input type="datetime-local" name="scheduled_at" class="w-full rounded form-input px-4 py-2" required>
                         <button type="submit" class="btn-primary px-4 py-2 rounded w-full">{{ __('Tạo phòng') }}</button>
                     </form>
+                    @else
+                    <p class="text-yellow-400 text-sm font-semibold">
+                        ⚠️ Bạn cần tạo ít nhất một khóa học trước khi có thể tạo phòng học trực tuyến.
+                    </p>
+                    @endif
                 </div>
-                @endif
             </div>
 
             <div class="bg-gray-800 border border-pink-600 rounded-lg p-6 hidden" id="questionPanel">
